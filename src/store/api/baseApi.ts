@@ -29,6 +29,8 @@ export const baseApi = createApi({
     "Stats",
     "Workflows",
     "Tasks",
+    "Delegation",
+    "Execution",
   ],
   endpoints: (builder) => ({
     // RE-ADD: Health Check from Slice 1
@@ -103,6 +105,51 @@ export const baseApi = createApi({
       transformResponse: (response: { data: any }) => response.data,
       providesTags: ["Stats", "Workflows"],
     }),
+    getWorkflows: builder.query<any, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 }) =>
+        `/workflows?page=${page}&limit=${limit}`,
+      providesTags: ["Workflows"],
+    }),
+
+    getWorkflowById: builder.query<any, string>({
+      query: (id) => `/workflows/${id}`,
+      providesTags: (result, error, id) => [{ type: "Workflows", id }],
+    }),
+    // --- SLICE 7: MOBILE TASK ACTIONS & COLLABORATION ---
+    getMyTasks: builder.query<any, void>({
+      query: () => "/tasks/my",
+      providesTags: ["Tasks"],
+    }),
+    getTaskById: builder.query<any, string>({
+      query: (id) => `/tasks/${id}`,
+      providesTags: ["Tasks"],
+    }),
+    handleTaskAction: builder.mutation<
+      any,
+      { taskId: string; action: string; formData?: any; targetUserId?: string }
+    >({
+      query: ({ taskId, ...body }) => ({
+        url: `/tasks/${taskId}/action`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Tasks", "Execution", "Workflows"],
+    }),
+    getComments: builder.query<any, string>({
+      query: (executionId) => `/tasks/executions/${executionId}/comments`,
+      providesTags: (result, error, id) => [{ type: "Tasks", id: "COMMENTS" }],
+    }),
+    addComment: builder.mutation<
+      any,
+      { executionId: string; content: string; taskId?: string }
+    >({
+      query: ({ executionId, ...body }) => ({
+        url: `/tasks/executions/${executionId}/comments`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Tasks", id: "COMMENTS" }],
+    }),
   }),
 });
 
@@ -119,4 +166,11 @@ export const {
   useGetDashboardStatsQuery,
   useGetRecentWorkflowsQuery,
   useGetDashboardOverviewQuery,
+  useGetWorkflowsQuery,
+  useGetWorkflowByIdQuery,
+  useGetMyTasksQuery,
+  useGetTaskByIdQuery,
+  useHandleTaskActionMutation,
+  useGetCommentsQuery,
+  useAddCommentMutation,
 } = baseApi;
