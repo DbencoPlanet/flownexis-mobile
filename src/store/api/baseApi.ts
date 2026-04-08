@@ -150,6 +150,28 @@ export const baseApi = createApi({
       }),
       invalidatesTags: [{ type: "Tasks", id: "COMMENTS" }],
     }),
+    getExecutionTrace: builder.query<any, string>({
+      query: (id) => `/executions/${id}`,
+      providesTags: (result, error, id) => [{ type: "Execution", id }],
+    }),
+    /**
+     * GET /executions/ongoing
+     * Fetches paginated active workflow requests
+     */
+    getOngoingExecutions: builder.query<any, { page: number; limit: number }>({
+      query: ({ page, limit }) =>
+        `/executions/ongoing?page=${page}&limit=${limit}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }: any) => ({
+                type: "Executions" as const,
+                id,
+              })),
+              { type: "Executions", id: "LIST" },
+            ]
+          : [{ type: "Executions", id: "LIST" }],
+    }),
   }),
 });
 
@@ -173,4 +195,6 @@ export const {
   useHandleTaskActionMutation,
   useGetCommentsQuery,
   useAddCommentMutation,
+  useGetExecutionTraceQuery,
+  useGetOngoingExecutionsQuery,
 } = baseApi;

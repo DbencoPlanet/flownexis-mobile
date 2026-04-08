@@ -27,6 +27,8 @@ import TaskInboxScreen from "./src/screens/TaskInboxScreen";
 // [ADDED] Slice 6 Workflow Screens
 import WorkflowsScreen from "./src/screens/WorkflowsScreen";
 import WorkflowViewerScreen from "./src/screens/WorkflowViewerScreen";
+import ExecutionsScreen from "./src/screens/ExecutionsScreen";
+import ExecutionDetailScreen from "./src/screens/ExecutionDetailScreen";
 
 // 2. UTILS & STORE
 import { store, RootState } from "./src/store";
@@ -139,6 +141,13 @@ function TabNavigator() {
           tabBarIcon: ({ color }) => <ClipboardList color={color} size={22} />,
           title: "My Tasks",
         }}
+      />
+
+      <Stack.Screen name="ExecutionsList" component={ExecutionsScreen} />
+      <Stack.Screen
+        name="ExecutionDetail"
+        component={ExecutionDetailScreen}
+        options={{ presentation: "card" }} // Provides a nice slide-in effect
       />
 
       <Tab.Screen
