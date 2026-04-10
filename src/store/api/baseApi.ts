@@ -31,6 +31,9 @@ export const baseApi = createApi({
     "Tasks",
     "Delegation",
     "Execution",
+    "Templates",
+    "TemplateCategories",
+    "Documents",
   ],
   endpoints: (builder) => ({
     // RE-ADD: Health Check from Slice 1
@@ -172,6 +175,39 @@ export const baseApi = createApi({
             ]
           : [{ type: "Executions", id: "LIST" }],
     }),
+    getTemplates: builder.query<
+      any,
+      { marketplace?: boolean; categoryId?: string; search?: string }
+    >({
+      query: (params) => ({
+        url: "/templates",
+        params,
+      }),
+      providesTags: ["Templates"],
+    }),
+    getTemplateCategories: builder.query<any, void>({
+      query: () => "/templates/categories",
+      providesTags: ["TemplateCategories"],
+    }),
+    forgeTemplate: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/templates/${id}/forge`,
+        method: "POST",
+      }),
+      // This tells RTK Query to refetch any component currently showing "Templates"
+      invalidatesTags: ["Templates"],
+    }),
+
+    // --- DOCUMENTS ---
+    getDocuments: builder.query<any, any>({
+      query: (params) => ({
+        url: "/documents",
+        // RTK Query automatically converts this object into query strings:
+        // ?search=val&page=1&limit=10
+        params,
+      }),
+      providesTags: ["Documents"],
+    }),
   }),
 });
 
@@ -197,4 +233,8 @@ export const {
   useAddCommentMutation,
   useGetExecutionTraceQuery,
   useGetOngoingExecutionsQuery,
+  useGetTemplatesQuery,
+  useGetTemplateCategoriesQuery,
+  useGetDocumentsQuery,
+  useForgeTemplateMutation,
 } = baseApi;

@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGetBrandingQuery } from "../store/api/baseApi"; // Mocking activity logic for now
+import { useGetBrandingQuery } from "../store/api/baseApi";
 import { Activity, Clock, ShieldCheck, User } from "lucide-react-native";
 import { useTheme } from "../theme/ThemeContext";
 
