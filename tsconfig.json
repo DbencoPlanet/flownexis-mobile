@@ -2,13 +2,10 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true
-  }
-  ,
+  },
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "**/*.d.ts", // Crucial: Tells TS to read all declaration files
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "**/*.d.ts"
   ]
 }
