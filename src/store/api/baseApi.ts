@@ -34,6 +34,11 @@ export const baseApi = createApi({
     "Templates",
     "TemplateCategories",
     "Documents",
+    "Wallet",
+    "Transaction",
+    "Subscription",
+    "Vault",
+    "Jobs",
   ],
   endpoints: (builder) => ({
     // RE-ADD: Health Check from Slice 1
@@ -208,6 +213,91 @@ export const baseApi = createApi({
       }),
       providesTags: ["Documents"],
     }),
+    getWallet: builder.query<any, void>({
+      query: () => "/wallet",
+      providesTags: ["Wallet"],
+    }),
+    getTransactions: builder.query<any, { page: number; limit: number }>({
+      query: ({ page, limit }) => `/transactions?page=${page}&limit=${limit}`,
+      providesTags: ["Transaction"],
+    }),
+    fundWallet: builder.mutation<any, { amount: number }>({
+      query: (body) => ({
+        url: "/wallet/fund",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Wallet", "Transaction"],
+    }),
+    getSubscription: builder.query<any, void>({
+      query: () => "/subscriptions",
+      providesTags: ["Subscription"],
+    }),
+    getSubscriptionPlans: builder.query<any, void>({
+      query: () => "/subscriptions/plans", // Assuming you added this endpoint to backend as we did for web
+    }),
+    upgradeSubscription: builder.mutation<any, { planId: string }>({
+      query: (body) => ({
+        url: "/subscriptions/upgrade",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Subscription"],
+    }),
+    getVaultSecrets: builder.query<any, void>({
+      query: () => "/billing/integrations", // Adjust path based on your routes
+      providesTags: ["Vault"],
+    }),
+    storebillingVaultSecret: builder.mutation<
+      any,
+      { keyName: string; secretValue: string }
+    >({
+      query: (body) => ({
+        url: "/billing/vault/secrets",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Vault"],
+    }),
+    // Integrations & Vault
+    getIntegrations: builder.query<any, void>({
+      query: () => "/integrations",
+      providesTags: ["Vault"],
+    }),
+    storeintegrationVaultSecret: builder.mutation<
+      any,
+      { keyName: string; secretValue: string }
+    >({
+      query: (body) => ({
+        url: "/integrations/vault",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Vault"],
+    }),
+    deleteIntegration: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/integrations/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Vault"],
+    }),
+
+    // Background Jobs
+    getJobStatus: builder.query<any, string>({
+      query: (id) => `/integrations/jobs/${id}`,
+    }),
+    triggerManualJob: builder.mutation<any, { jobName: string; data: any }>({
+      query: (body) => ({
+        url: "/integrations/jobs/trigger",
+        method: "POST",
+        body,
+      }),
+    }),
+    getJobHistory: builder.query<any, void>({
+      query: () => "/integrations/jobs/history",
+      providesTags: ["Jobs"],
+    }),
   }),
 });
 
@@ -237,4 +327,18 @@ export const {
   useGetTemplateCategoriesQuery,
   useGetDocumentsQuery,
   useForgeTemplateMutation,
+  useGetWalletQuery,
+  useGetTransactionsQuery,
+  useFundWalletMutation,
+  useGetSubscriptionQuery,
+  useGetSubscriptionPlansQuery,
+  useUpgradeSubscriptionMutation,
+  useGetVaultSecretsQuery,
+  useStorebillingVaultSecretMutation,
+  useGetIntegrationsQuery,
+  useStoreintegrationVaultSecretMutation,
+  useDeleteIntegrationMutation,
+  useGetJobStatusQuery,
+  useTriggerManualJobMutation,
+  useGetJobHistoryQuery,
 } = baseApi;
