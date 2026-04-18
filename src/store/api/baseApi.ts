@@ -39,6 +39,8 @@ export const baseApi = createApi({
     "Subscription",
     "Vault",
     "Jobs",
+    "Analytics",
+    "Notifications",
   ],
   endpoints: (builder) => ({
     // RE-ADD: Health Check from Slice 1
@@ -298,6 +300,33 @@ export const baseApi = createApi({
       query: () => "/integrations/jobs/history",
       providesTags: ["Jobs"],
     }),
+
+    // --- 📊 INTELLIGENCE & PROCESS MINING ---
+    getAnalyticsDashboard: builder.query<any, void>({
+      query: () => "/analytics/dashboard",
+      providesTags: ["Analytics"],
+    }),
+    getBottlenecks: builder.query<any, void>({
+      query: () => "/analytics/bottlenecks",
+      providesTags: ["Analytics"],
+    }),
+    getProcessMining: builder.query<any, void>({
+      query: () => "/analytics/process-mining",
+      providesTags: ["Analytics"],
+    }),
+
+    // --- 🔔 DEDICATED NOTIFICATIONS ---
+    getNotifications: builder.query<any, void>({
+      query: () => "/notifications",
+      providesTags: ["Notifications"],
+    }),
+    markNotificationRead: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/notifications/${id}/read`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Notifications"],
+    }),
   }),
 });
 
@@ -341,4 +370,9 @@ export const {
   useGetJobStatusQuery,
   useTriggerManualJobMutation,
   useGetJobHistoryQuery,
+  useGetAnalyticsDashboardQuery,
+  useGetBottlenecksQuery,
+  useGetProcessMiningQuery,
+  useGetNotificationsQuery,
+  useMarkNotificationReadMutation,
 } = baseApi;
