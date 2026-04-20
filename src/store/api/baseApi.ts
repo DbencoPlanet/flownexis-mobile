@@ -327,6 +327,25 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Notifications"],
     }),
+    getKnowledge: builder.query<any, void>({
+      query: () => "/intelligence/knowledge",
+      providesTags: ["Logs"],
+    }),
+    uploadKnowledge: builder.mutation<any, FormData>({
+      query: (formData) => ({
+        url: "/intelligence/knowledge/ingest",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Logs"],
+    }),
+    executeAgenticTask: builder.mutation<any, any>({
+      query: (data) => ({
+        url: "/intelligence/agent/execute",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -375,4 +394,7 @@ export const {
   useGetProcessMiningQuery,
   useGetNotificationsQuery,
   useMarkNotificationReadMutation,
+  useExecuteAgenticTaskMutation,
+  useGetKnowledgeQuery,
+  useUploadKnowledgeMutation,
 } = baseApi;

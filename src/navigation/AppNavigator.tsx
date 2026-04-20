@@ -34,11 +34,11 @@ import DocumentVaultScreen from "../screens/documents/DocumentVaultScreen";
 import TaskDetailsScreen from "../screens/TaskDetailsScreen";
 import IntegrationsScreen from "../screens/IntegrationsScreen";
 
-// [SLICE 11] NEW SCREENS
 import NotificationsScreen from "../screens/NotificationsScreen";
 import AnalyticsScreen from "../screens/AnalyticsScreen";
 
 import HeaderNotificationIcon from "../components/HeaderNotificationIcon";
+import ConversationalFormScreen from "../screens/ConversationalFormScreen";
 
 import {
   Home,
@@ -50,6 +50,8 @@ import {
   ShoppingBag,
   HardDrive,
   Zap,
+  BrainCircuit,
+  MessageSquare,
 } from "lucide-react-native";
 
 const Stack = createNativeStackNavigator();
@@ -268,6 +270,21 @@ export default function AppNavigator() {
               name="Analytics"
               component={AnalyticsScreen}
               options={{ headerShown: true, title: "PROCESS INTELLIGENCE" }}
+            />
+            <Stack.Screen
+              name="ConversationalForm"
+              component={ConversationalFormScreen}
+              options={{
+                headerShown: true,
+                title: "AI AGENT INTERFACE",
+                animation: "slide_from_right",
+                headerStyle: { backgroundColor: colors.card },
+                headerTitleStyle: {
+                  fontWeight: "900",
+                  color: colors.primary,
+                  fontSize: 12,
+                },
+              }}
             />
           </>
         )}
